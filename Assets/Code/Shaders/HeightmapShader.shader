@@ -2,12 +2,15 @@ Shader "Playground/Heightmap Shader"
 {
     Properties
     {
+        _DiffWeight("Diffuse lightning weight", Range(0, 1)) = 1
+        _DiffLight("Lightning adjustment", Range(0, 1)) = 1
         _MainTex ("Triplanar", 2D) = "white" {}
         [NoScaleOffset]_HeightTex("Height Map", 2D) = "black" {}
         _HeightScale("Height displacement multiplier", float) = 1
         [NoScaleOffset]_GradientTex("Gradient Map", 2D) = "white" {}
         [NoScaleOffset]_LineTex("Height Map", 2D) = "white" {}
         _LineScale("Lines per one unit of height", float) = 1
+        _LineModifier("Adjust minimal slope for lines", float) = 1
         [PerRendererData]_Offset("Offset", Vector) = (0,0,0,0) // specific per renderer
     }
 
@@ -40,6 +43,8 @@ Shader "Playground/Heightmap Shader"
                 float3 normal : TEXCOORD2; // world space normal
             };
 
+            float _DiffWeight;
+            float _DiffLight;
             sampler2D _MainTex;
             float4 _MainTex_ST;
             sampler2D _HeightTex;
@@ -49,6 +54,7 @@ Shader "Playground/Heightmap Shader"
             sampler2D _GradientTex;
             sampler2D _LineTex;
             float _LineScale;
+            float _LineModifier;
 
             v2f vert(u2v v)
             {
@@ -77,8 +83,7 @@ Shader "Playground/Heightmap Shader"
                 */
                 float3 norm = float3(-2 * ((xP - xN) * _HeightScale), 4, -2 * ((yP - yN) * _HeightScale));
                 norm = normalize(norm);
-                // useful for testing
-                //norm = UnityObjectToWorldNormal(norm);
+
                 o.normal = norm;
                 o.worldpos = mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1)).xyz;
 
@@ -95,19 +100,20 @@ Shader "Playground/Heightmap Shader"
             fixed4 frag(v2f i) : SV_Target
             {
                 // diffuse
-                fixed4 col = i.diffuse;
+                fixed4 col = i.diffuse  * _DiffWeight + (1 - _DiffWeight);
                 // gradient color
-                col = tex2D(_GradientTex, i.uv);
+                col *= tex2D(_GradientTex, i.uv);
                 // line texture
-                col *= tex2D(_LineTex, float2(i.uv.x * _HeightScale * _LineScale, i.uv.y));
+                fixed4 linecol = tex2D(_LineTex, float2(i.uv.x * _HeightScale * _LineScale, i.uv.y));
+                col *=  lerp(linecol, float4(1, 1, 1, 0), i.uv.y*_LineModifier - (_LineModifier-1));
                 // triplanar
                 i.normal = abs(i.normal);
+                i.normal = i.normal/(i.normal.z+i.normal.y+i.normal.x);
                 fixed4 tripl = tex2D(_MainTex, TRANSFORM_TEX(i.worldpos.xy, _MainTex)) * i.normal.z;
                 tripl += tex2D(_MainTex, TRANSFORM_TEX(i.worldpos.xz, _MainTex)) * i.normal.y;
                 tripl += tex2D(_MainTex, TRANSFORM_TEX(i.worldpos.yz, _MainTex)) * i.normal.x;
-                col *= tripl/length(i.normal);
-
-                return col;
+                col *= tripl;
+                return col * _DiffLight;
             }
             ENDCG
         }

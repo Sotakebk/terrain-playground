@@ -13,9 +13,12 @@ public class SimpleCamera : MonoBehaviour
     private void Update()
     {
         // handle rotation
-        rotationX += Input.GetAxis("Mouse X") * sensitivity;
-        rotationY += Input.GetAxis("Mouse Y") * sensitivity;
-        rotationY = Mathf.Clamp(rotationY, -90, 90);
+        if (Input.GetMouseButton(1))
+        {
+            rotationX += Input.GetAxis("Mouse X") * sensitivity;
+            rotationY += Input.GetAxis("Mouse Y") * sensitivity;
+            rotationY = Mathf.Clamp(rotationY, -90, 90);
+        }
 
         // apply rotation
         transform.localRotation = Quaternion.AngleAxis(rotationX, Vector3.up);
@@ -37,11 +40,5 @@ public class SimpleCamera : MonoBehaviour
             transform.position += Vector3.up * speed;
         if (Input.GetKey(KeyCode.E))
             transform.position -= Vector3.up * speed;
-
-        // lock/unlock cursor
-        if (Input.GetKeyDown(KeyCode.End))
-        {
-            Cursor.lockState ^= Cursor.lockState;
-        }
     }
 }
