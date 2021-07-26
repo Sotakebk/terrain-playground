@@ -7,7 +7,7 @@
 
         public Heightmap(int size)
         {
-            if ((size & (size - 1)) != 0)
+            if (!Helper.IsPowerOf2(size))
                 throw new System.ArgumentException("'size' not power of 2");
 
             this.size = size;
