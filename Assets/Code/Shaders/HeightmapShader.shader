@@ -2,16 +2,16 @@ Shader "Playground/Heightmap Shader"
 {
     Properties
     {
-        _DiffWeight("Diffuse lightning weight", Range(0, 1)) = 1
-        _DiffLight("Lightning adjustment", Range(0, 1)) = 1
-        _MainTex ("Triplanar", 2D) = "white" {}
+        _DiffWeight("Diffuse lightning weight", Range(0, 1)) = 0.9
+        _DiffLight("Lightning adjustment", Range(0, 1)) = 0.7
+        _MainTex("Triplanar", 2D) = "white" {}
         [NoScaleOffset]_HeightTex("Height Map", 2D) = "black" {}
-        _HeightScale("Height displacement multiplier", float) = 1
+        _HeightScale("Height displacement multiplier", float) = 32
         [NoScaleOffset]_GradientTex("Gradient Map", 2D) = "white" {}
-        [NoScaleOffset]_LineTex("Height Map", 2D) = "white" {}
+        [NoScaleOffset]_LineTex("Line Texture", 2D) = "white" {}
         _LineScale("Lines per one unit of height", float) = 1
-        _LineModifier("Adjust minimal slope for lines", float) = 1
-        [PerRendererData]_Offset("Offset", Vector) = (0,0,0,0) // specific per renderer
+        _LineModifier("Adjust minimal slope for lines", float) = 100
+        [PerRendererData]_Offset("Offset", Vector) = (0, 0, 0, 0)
     }
 
     SubShader
@@ -100,15 +100,15 @@ Shader "Playground/Heightmap Shader"
             fixed4 frag(v2f i) : SV_Target
             {
                 // diffuse
-                fixed4 col = i.diffuse  * _DiffWeight + (1 - _DiffWeight);
+                fixed4 col = i.diffuse * _DiffWeight + (1 - _DiffWeight);
                 // gradient color
                 col *= tex2D(_GradientTex, i.uv);
                 // line texture
                 fixed4 linecol = tex2D(_LineTex, float2(i.uv.x * _HeightScale * _LineScale, i.uv.y));
-                col *=  lerp(linecol, float4(1, 1, 1, 0), i.uv.y*_LineModifier - (_LineModifier-1));
+                col *= lerp(linecol, float4(1, 1, 1, 0), clamp(i.uv.y * _LineModifier - (_LineModifier - 1), 0, 1));
                 // triplanar
                 i.normal = abs(i.normal);
-                i.normal = i.normal/(i.normal.z+i.normal.y+i.normal.x);
+                i.normal = i.normal / (i.normal.z + i.normal.y + i.normal.x);
                 fixed4 tripl = tex2D(_MainTex, TRANSFORM_TEX(i.worldpos.xy, _MainTex)) * i.normal.z;
                 tripl += tex2D(_MainTex, TRANSFORM_TEX(i.worldpos.xz, _MainTex)) * i.normal.y;
                 tripl += tex2D(_MainTex, TRANSFORM_TEX(i.worldpos.yz, _MainTex)) * i.normal.x;

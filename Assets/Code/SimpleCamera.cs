@@ -7,8 +7,8 @@ public class SimpleCamera : MonoBehaviour
     public float slowFactor = 0.5f;
     public float fastFactor = 10;
 
-    private float rotationX = 90.0f;
-    private float rotationY = 90.0f;
+    private float rotationX = 0.0f;
+    private float rotationY = 0.0f;
 
     private void Update()
     {
