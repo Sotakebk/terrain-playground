@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 
 namespace Playground
@@ -19,6 +18,16 @@ namespace Playground
                     to[x + to_size * y] = from[x + from_size * y];
                 }
             }
+        }
+
+        public static float RangeNPTo01(float value)
+        {
+            return (value + 1f) / 2f;
+        }
+
+        public static float Range01ToNP(float value)
+        {
+            return (value * 2) - 1;
         }
 
         public static void Normalize(Heightmap h)

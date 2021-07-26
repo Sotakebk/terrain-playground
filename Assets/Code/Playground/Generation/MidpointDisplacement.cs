@@ -15,7 +15,7 @@ namespace Playground.Generation
          *
          */
 
-        public static void FillMidpoint(Heightmap map, int seed, float noisiness = 0.5f, float noiseDamping = 0.5f, float MiddleStrength = 0.7f)
+        public static void Fill(Heightmap map, int seed, float noisiness = 0.5f, float noiseDamping = 0.5f, float MidpointStrength = 0.25f)
         {
             int s = map.size;
             int s1 = s + 1;
@@ -35,7 +35,7 @@ namespace Playground.Generation
                 {
                     for (int y = 0; y < subs; y++)
                     {
-                        Square(x * size, y * size, size);
+                        Subdivision(x * size, y * size, size);
                     }
                 }
                 noisiness *= noiseDamping;
@@ -44,7 +44,7 @@ namespace Playground.Generation
 
             Helper.ResizeCopy(heights, map.data, s1, s);
 
-            void Square(int x, int y, int size)
+            void Subdivision(int x, int y, int size)
             {
                 // coordinates
                 int maxx = x + size;
@@ -72,17 +72,17 @@ namespace Playground.Generation
 
                 // generate midpoint value
                 var avg = (midx_y + x_midy + midx_maxy + maxx_midy) / 4;
-                heights[midx + midy * s1] = GetHeight(avg, noisiness * MiddleStrength, midx, midy);
+                heights[midx + midy * s1] = GetHeight(avg, noisiness * MidpointStrength, midx, midy);
             }
 
             float GetHeight(float average, float range, int x, int y)
             {
-                float value = (float)(SimpleNoise.GetNoiseDouble(x, y, seed) * range);
-                return value + average;
+                float value = Helper.Range01ToNP(SimpleNoise.GetNoiseFloat(x, y, seed));
+                return value * range + average;
             }
         }
 
-        public static void FillSensibleMidpoint(Heightmap map, int seed, float noisiness = 1f, float noiseDamping = 1f, float MiddleStrength = (1 / 4f))
+        public static void FillSensible(Heightmap map, int seed, float noisiness = 0.5f, float noiseDamping = 0.5f, float MidpointStrength = 0.25f)
         {
             int s = map.size;
             int s1 = s + 1;
@@ -102,7 +102,7 @@ namespace Playground.Generation
                 {
                     for (int y = 0; y < subs; y++)
                     {
-                        Square(x * size, y * size, size);
+                        Subdivision(x * size, y * size, size);
                     }
                 }
                 noisiness *= noiseDamping;
@@ -111,7 +111,7 @@ namespace Playground.Generation
 
             Helper.ResizeCopy(heights, map.data, s1, s);
 
-            void Square(int x, int y, int size)
+            void Subdivision(int x, int y, int size)
             {
                 // coordinates
                 int maxx = x + size;
@@ -143,17 +143,17 @@ namespace Playground.Generation
                 var max = Math.Max(Math.Max(midx_y, x_midy), Math.Max(midx_maxy, maxx_midy));
                 var range = Math.Abs(min - max);
 
-                heights[midx + midy * s1] = GetHeight(avg, MiddleStrength * range * noisiness, midx, midy);
+                heights[midx + midy * s1] = GetHeight(avg, MidpointStrength * range * noisiness, midx, midy);
             }
 
             float GetHeight(float average, float range, int x, int y)
             {
-                float value = (float)(SimpleNoise.GetNoiseDouble(x, y, seed) * range);
-                return value + average;
+                float value = Helper.Range01ToNP(SimpleNoise.GetNoiseFloat(x, y, seed));
+                return value * range + average;
             }
         }
 
-        public static void FillWeirdMidpoint(Heightmap map, int seed)
+        public static void FillCoherent(Heightmap map, int seed)
         {
             int s = map.size;
             int s1 = s + 1;
@@ -173,7 +173,7 @@ namespace Playground.Generation
                 {
                     for (int y = 0; y < subs; y++)
                     {
-                        Square(x * size, y * size, size);
+                        Subdivision(x * size, y * size, size);
                     }
                 }
                 size >>= 1;
@@ -181,7 +181,7 @@ namespace Playground.Generation
 
             Helper.ResizeCopy(heights, map.data, s1, s);
 
-            void Square(int x, int y, int size)
+            void Subdivision(int x, int y, int size)
             {
                 // coordinates
                 int maxx = x + size;
@@ -215,8 +215,7 @@ namespace Playground.Generation
 
             float GetHeight(float min, float range, int x, int y)
             {
-                float value = (float)SimpleNoise.GetNoiseDouble(x, y, seed) * range;
-                return value + min;
+                return min + SimpleNoise.GetNoiseFloat(x, y, seed) * range;
             }
         }
     }

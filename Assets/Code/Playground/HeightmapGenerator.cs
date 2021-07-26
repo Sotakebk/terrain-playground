@@ -1,4 +1,3 @@
-using UnityEngine;
 using Playground.Generation;
 
 namespace Playground
@@ -9,7 +8,7 @@ namespace Playground
         {
             var h = new Heightmap(1024);
 
-            MidpointDisplacement.FillWeirdMidpoint(h, 1);
+            SquareDiamond.Fill(h, 1);
 
             Helper.Normalize(h);
 

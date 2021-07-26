@@ -9,16 +9,15 @@ namespace Playground.Generation
             return v ^ (v >> 16);
         }
 
-        // returns a -1 to 1 double value
+        // returns a 0 to 1 value
         public static double GetNoiseDouble(int x, int y, int z)
         {
             return GetNoise(x, y, z) / (double)int.MaxValue;
         }
 
-        public static double GetNoiseDoubleNormal(int x, int y, int z)
+        public static float GetNoiseFloat(int x, int y, int z)
         {
-            double value = (GetNoiseDouble(x, y, z) + 1) / 2.0;
-            return (value < 0) ? 0 : ((value > 1) ? 1 : value);
+            return (float)GetNoiseDouble(x, y, z);
         }
     }
 }
