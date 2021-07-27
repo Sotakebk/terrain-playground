@@ -2,7 +2,7 @@ using System;
 
 namespace Playground.Generation
 {
-    public static class SquareDiamond
+    public static class DiamondSquare
     {
         public static void Fill(Heightmap map, int seed, float noisiness = 0.9f, float noiseDamping = 0.9f, float MidpointStrength = 0.25f)
         {
@@ -102,7 +102,10 @@ namespace Playground.Generation
                     n++;
                 }
 
-                heights[x + y * s1] = GetHeight(sum / n, noisiness * Math.Abs(min - max) / 2f, x, y);
+                float average = sum / n;
+                float amplitude = noisiness * Math.Abs(min - max) * 0.5f;
+
+                heights[x + y * s1] = GetHeight(average, amplitude, x, y);
             }
 
             void Diamond(int x, int y, int size)
@@ -120,24 +123,24 @@ namespace Playground.Generation
 
                 int maxx = x + size;
                 int maxy = y + size;
-                int midx = (2 * x + size) / 2;
-                int midy = (2 * y + size) / 2;
                 float xy = heights[x + y * s1];
                 float x1y = heights[maxx + y * s1];
                 float xy1 = heights[x + maxy * s1];
                 float x1y1 = heights[maxx + maxy * s1];
 
-                float avg = (xy + x1y + xy1 + x1y1) / 4f;
+                float avg = (xy + x1y + xy1 + x1y1) * 0.25f;
                 float min = Math.Min(Math.Min(xy, x1y), Math.Min(xy1, x1y1));
                 float max = Math.Max(Math.Max(xy, x1y), Math.Max(xy1, x1y1));
-                float range = Math.Abs(min - max) * MidpointStrength * noisiness;
+                float amplitude = Math.Abs(min - max) * MidpointStrength * noisiness;
 
-                heights[midx + midy * s1] = GetHeight(avg, range, midx, midy);
+                int midx = x + size / 2;
+                int midy = y + size / 2;
+                heights[midx + midy * s1] = GetHeight(avg, amplitude, midx, midy);
             }
 
-            float GetHeight(float average, float range, int x, int y)
+            float GetHeight(float average, float amplitude, int x, int y)
             {
-                return average + Helper.Range01ToNP(SimpleNoise.GetNoiseFloat(x, y, seed)) * range;
+                return average + Helper.Range01ToNP(SimpleNoise.GetNoiseFloat(x, y, seed)) * amplitude;
             }
         }
     }
