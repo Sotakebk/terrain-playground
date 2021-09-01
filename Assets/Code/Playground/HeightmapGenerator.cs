@@ -8,7 +8,7 @@ namespace Playground
         {
             var h = new Heightmap(1024);
 
-            SquareDiamond.Fill(h, 1);
+            DiamondSquare.Fill(h, 1);
 
             Helper.Normalize(h);
 
