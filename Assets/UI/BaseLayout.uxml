@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="styles/GeneralUSS.uss" />
+    <ui:VisualElement name="Root" style="flex-grow: 1; flex-shrink: 0;">
+        <ui:VisualElement name="Container-buttons" class="tintedPanel" style="flex-direction: row; flex-wrap: wrap; justify-content: center; flex-shrink: 0;">
+            <ui:Button text="Close" display-tooltip-when-elided="true" name="Button-close" focusable="false" style="padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;" />
+            <ui:Button text="Display Settings" display-tooltip-when-elided="true" name="Button-display" focusable="false" style="padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;" />
+            <ui:Button text="Generation Settings" display-tooltip-when-elided="true" name="Button-generation" focusable="false" style="padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Container-window" style="flex-grow: 1; flex-shrink: 0;" />
+    </ui:VisualElement>
+</ui:UXML>

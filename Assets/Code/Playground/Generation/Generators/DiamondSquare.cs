@@ -1,6 +1,6 @@
 using System;
 
-namespace Playground.Generation
+namespace Playground.Generation.Generators
 {
     public static class DiamondSquare
     {

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Playground
 {
@@ -28,6 +29,17 @@ namespace Playground
         public static float Range01ToNP(float value)
         {
             return (value * 2) - 1;
+        }
+
+        // E^(-x-b)
+        public static float EXBCurve(float X, float B)
+        {
+            return Mathf.Exp(-X - B);
+        }
+
+        public static float InverseEXB(float Y, float B)
+        {
+            return -Mathf.Log(Y) - B;
         }
 
         public static void Normalize(Heightmap h)
