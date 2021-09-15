@@ -1,19 +1,37 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Playground.Generation
 {
     public class GenerationManager : MonoBehaviour
     {
-        public Graphics.GraphicsManager graphicsManager;
+        private List<BasicGraph> graphs;
 
-        public void Generate()
+        public IReadOnlyList<BasicGraph> Graphs => graphs.AsReadOnly();
+
+        public void CreateNewGraph(string Name)
         {
-            var h = new Heightmap(1024);
-            Generators.DiamondSquare.Fill(h, 1);
-            Helper.Normalize(h);
+            graphs.Add(new BasicGraph()
+            {
+                Name = Name
+            });
+        }
 
-            graphicsManager.AddHeightmap(h, "default");
-            graphicsManager.SetHeightmap("default");
+        public void DeleteGraph(Graph graph)
+        {
+            graphs.RemoveAll((_graph) => ReferenceEquals(_graph, graph));
+        }
+
+        public void ExecuteGraph(string Name)
+        {
+            graphs.Find((graph) => graph.Name == Name).Execute();
+        }
+
+        // TODO serialize, deserialize?
+
+        private void Awake()
+        {
+            graphs = new List<BasicGraph>();
         }
     }
 }

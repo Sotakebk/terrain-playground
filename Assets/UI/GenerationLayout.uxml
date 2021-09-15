@@ -1,7 +1,18 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="styles/GeneralUSS.uss" />
-    <ui:VisualElement class="tintedPanel" style="width: 100%; height: 100%; flex-grow: 1; flex-shrink: 0; align-items: flex-start;">
-        <ui:Label text="Generation Settings" display-tooltip-when-elided="true" />
-        <ui:Button text="Click to generate an example" display-tooltip-when-elided="true" name="Button-generate" />
+    <ui:VisualElement name="Container-generation" class="tintedPanel" style="width: 100%; height: 100%; flex-grow: 1; flex-shrink: 1; align-items: stretch;">
+        <ui:VisualElement name="Container-divider" style="flex-direction: row; justify-content: center; align-items: stretch; flex-grow: 1;">
+            <ui:VisualElement name="Container-tree" style="flex-grow: 1; width: 50%; border-right-width: 2px; border-right-color: rgb(132, 132, 132);">
+                <ui:VisualElement name="Container-top" style="flex-direction: row; align-items: stretch;">
+                    <ui:Button text="Add..." display-tooltip-when-elided="true" name="Button-add" class="smallButton" style="left: 0;" />
+                    <ui:VisualElement name="Container-RtoL" style="flex-grow: 1; flex-direction: row-reverse;">
+                        <ui:Button text="Graphs" display-tooltip-when-elided="true" name="Button-graphs" class="smallButton" />
+                        <ui:Button text="Execute" display-tooltip-when-elided="true" name="Button-execute" class="smallButton" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Container-graph" style="flex-grow: 1; flex-shrink: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Container-inspector" style="flex-grow: 1; width: 40%; border-left-width: 2px; border-left-color: rgb(132, 132, 132); max-width: 400px;" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -1,15 +1,15 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="styles/GeneralUSS.uss" />
-    <ui:VisualElement name="Container-display" class="tintedPanel" style="position: absolute; left: 0; top: 0; right: 50%; bottom: 0;">
-        <ui:Label text="Display Settings" display-tooltip-when-elided="true" />
-        <ui:ScrollView mode="Vertical">
-            <ui:Foldout text="Light" value="true" name="Foldout-lightning" style="flex-grow: 0;">
+    <ui:VisualElement name="Container-display" class="tintedPanel" style="position: absolute; left: 0; top: 0; right: auto; bottom: 0; min-width: auto; width: 50%; max-width: 400px;">
+        <ui:ScrollView mode="Vertical" vertical-scroller-visibility="Auto">
+            <ui:Label text="Display Settings" display-tooltip-when-elided="true" />
+            <ui:Foldout text="Light" value="false" name="Foldout-lightning" style="flex-grow: 0;">
                 <ui:Slider picking-mode="Ignore" label="Sun direction" value="90" high-value="360" name="Slider-sunDirection" />
                 <ui:Slider picking-mode="Ignore" label="Sun angle" value="0" high-value="90" name="Slider-sunAngle" direction="Horizontal" show-input-field="false" focusable="true" low-value="0" />
                 <ui:Slider picking-mode="Ignore" label="Diffuse strength" value="0.9" high-value="1" name="Slider-diffuse" />
                 <ui:Slider picking-mode="Ignore" label="Brightness adjustment" value="0.7" high-value="1" name="Slider-brightness" />
             </ui:Foldout>
-            <ui:Foldout text="Height and slope" name="Foldout-heightSlope" value="true">
+            <ui:Foldout text="Height and slope" name="Foldout-heightSlope" value="false">
                 <ui:Slider picking-mode="Ignore" label="Height displacement" value="256" high-value="2048" name="Slider-heightScale" show-input-field="false" />
                 <ui:Slider picking-mode="Ignore" label="Triplanar tiling scale" value="6" high-value="10" name="Slider-triplanarScale" style="justify-content: center;" />
                 <ui:Label text="Select height gradient" display-tooltip-when-elided="true" enable-rich-text="true" />

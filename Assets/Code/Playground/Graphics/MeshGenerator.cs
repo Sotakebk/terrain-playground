@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace Playground.Graphics
 {
-    // Responsible for creating the mesh, setting up mesh chunks etc
     public class MeshGenerator : MonoBehaviour
     {
         private Mesh plane;

@@ -15,8 +15,8 @@ namespace Playground.UI
 
         private void Awake()
         {
-            graphicsUI = transform.GetComponent<GraphicsUI>();
-            generationUI = transform.GetComponent<GenerationUI>();
+            graphicsUI = GetComponent<GraphicsUI>();
+            generationUI = GetComponent<GenerationUI>();
             if (graphicsUI == null || generationUI == null)
                 throw new System.NullReferenceException();
         }
@@ -26,30 +26,34 @@ namespace Playground.UI
             var root = uidocument.rootVisualElement;
             container = root.Q<VisualElement>(name: "Container-window");
 
+            graphicsUI.Construct(container);
+            generationUI.Construct(container);
+            graphicsUI.Disable();
+            generationUI.Disable();
+
             Button b = root.Q<Button>(name: "Button-close");
             b.clicked += () =>
             {
-                RemoveNestedUI();
+                graphicsUI.Disable();
+                generationUI.Disable();
             };
 
             b = root.Q<Button>(name: "Button-display");
             b.clicked += () =>
             {
-                RemoveNestedUI();
-                graphicsUI.Construct(container);
+                graphicsUI.Enable();
+                generationUI.Disable();
             };
 
             b = root.Q<Button>(name: "Button-generation");
             b.clicked += () =>
             {
-                RemoveNestedUI();
-                generationUI.Construct(container);
+                graphicsUI.Disable();
+                generationUI.Enable();
             };
-        }
 
-        private void RemoveNestedUI()
-        {
-            container.Clear();
+            graphicsUI.Initialize();
+            generationUI.Initialize();
         }
     }
 }

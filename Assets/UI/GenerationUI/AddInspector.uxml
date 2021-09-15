@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Container-AddInspector" style="flex-grow: 1;">
+        <ui:GroupBox>
+            <ui:Label text="This is the selected block name" display-tooltip-when-elided="true" name="Label-name" style="-unity-font-style: bold; font-size: 24px;" />
+            <ui:Label text="This is the selected block description" display-tooltip-when-elided="true" name="Label-description" style="-unity-text-align: middle-left; font-size: 14px;" />
+            <ui:VisualElement style="align-items: center;">
+                <ui:Button text="Add" display-tooltip-when-elided="true" name="Button-add" />
+            </ui:VisualElement>
+        </ui:GroupBox>
+        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1">
+            <ui:VisualElement name="Container-blocks" />
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>

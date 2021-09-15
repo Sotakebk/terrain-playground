@@ -1,67 +1,62 @@
+using Playground.IoC;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Playground.Graphics
 {
     [RequireComponent(typeof(MeshGenerator))]
-    public class GraphicsManager : MonoBehaviour
+    public class GraphicsManager : MonoBehaviour, IService
     {
         [SerializeField]
         private Material OriginalMaterial;
 
+        [SerializeField]
+        private Light Sun;
+
+        [SerializeField]
+        private List<Texture2D> gradientTextures;
+
+        [SerializeField]
+        private List<Texture2D> lineTextures;
+
+        private List<Texture2D> heightmapTextures;
+
         public Material HeightmapMaterial { get; private set; }
-
-        public Light Sun;
-
-        public List<Texture2D> GradientTextures;
-        public List<Texture2D> LineTextures;
+        public IReadOnlyList<Texture2D> GradientTextures => gradientTextures;
+        public IReadOnlyList<Texture2D> LineTextures => lineTextures;
+        public IReadOnlyList<Texture2D> HeightmapTextures => heightmapTextures;
 
         private MeshGenerator meshGenerator;
-        private List<Texture2D> heightmapList;
-
-        public ReadOnlyCollection<Texture2D> Heightmaps
-        {
-            get
-            {
-                return heightmapList.AsReadOnly();
-            }
-        }
 
         private void Awake()
         {
-            HeightmapMaterial = new Material(OriginalMaterial);
             meshGenerator = transform.GetComponent<MeshGenerator>();
-            heightmapList = new List<Texture2D>();
 
-            if (meshGenerator == null)
-                throw new System.NullReferenceException();
+            HeightmapMaterial = new Material(OriginalMaterial);
+            heightmapTextures = new List<Texture2D>();
 
             if (!SystemInfo.SupportsTextureFormat(TextureFormat.RFloat))
                 throw new System.Exception("SystemInfo.SupportsTextureFormat(TextureFormat.RFloat) = FALSE");
+            if (meshGenerator == null)
+                throw new System.NullReferenceException();
 
             meshGenerator.Initialize();
         }
 
         public void AddHeightmap(Heightmap heightmap, string submittedName)
         {
-            Texture2D heightmapTexture = null;
+            Texture2D heightmapTexture = heightmapTextures.Find((tex) => tex.name == submittedName);
+            bool exists = (heightmap != null);
 
-            for (int x = 0; x < heightmapList.Count; x++)
+            if (exists && heightmap.Size != heightmapTexture.width)
             {
-                if (heightmapList[x].name == submittedName)
-                {
-                    heightmapTexture = heightmapList[x];
-                    break;
-                }
-            }
-
-            if (heightmapTexture != null && heightmap.size != heightmapTexture.width)
                 Destroy(heightmapTexture);
+                exists = false;
+            }
 
             if (heightmapTexture == null)
             {
-                heightmapTexture = new Texture2D(heightmap.size, heightmap.size, TextureFormat.RFloat, false, true)
+                heightmapTexture = new Texture2D(heightmap.Size, heightmap.Size, TextureFormat.RFloat, false, true)
                 {
                     name = submittedName,
                     wrapMode = TextureWrapMode.Clamp,
@@ -70,22 +65,20 @@ namespace Playground.Graphics
                 };
             }
 
-            heightmapTexture.SetPixelData(heightmap.data, 0);
+            heightmapTexture.SetPixelData(heightmap.Data, 0);
             heightmapTexture.Apply();
 
-            heightmapList.Add(heightmapTexture);
+            if (!exists)
+                heightmapTextures.Add(heightmapTexture);
         }
 
-        public void SetHeightmap(string name)
+        // material settings
+
+        public void SetActiveHeightmap(string name)
         {
-            for (int x = 0; x < heightmapList.Count; x++)
-            {
-                if (heightmapList[x].name == name)
-                {
-                    SetHeightTexture(heightmapList[x]);
-                    break;
-                }
-            }
+            var texture = heightmapTextures.Find((tex) => tex.name == name);
+            if (texture != null)
+                SetHeightTexture(texture);
         }
 
         private void SetHeightTexture(Texture2D texture)
@@ -96,27 +89,19 @@ namespace Playground.Graphics
 
         public void RemoveHeightmap(string name)
         {
-            for (int x = 0; x < heightmapList.Count; x++)
-            {
-                if (heightmapList[x].name == name)
-                {
-                    Destroy(heightmapList[x]);
-                    heightmapList.RemoveAt(x);
-                    break;
-                }
-            }
+            var tex = heightmapTextures.Find((tex) => tex.name == name);
+            heightmapTextures.Remove(tex);
+            Destroy(tex);
         }
 
-        public void SetGradientTexture(int ID)
+        public void SetGradientTexture(int index)
         {
-            Debug.Log(ID);
-            HeightmapMaterial.SetTexture("_GradientTex", GradientTextures[ID]);
+            HeightmapMaterial.SetTexture("_GradientTex", GradientTextures[index]);
         }
 
-        public void SetLineTexture(int ID)
+        public void SetLineTexture(int index)
         {
-            Debug.Log(ID);
-            HeightmapMaterial.SetTexture("_LineTex", LineTextures[ID]);
+            HeightmapMaterial.SetTexture("_LineTex", LineTextures[index]);
         }
 
         public float DiffuseWeight
