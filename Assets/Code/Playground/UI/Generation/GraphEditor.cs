@@ -9,17 +9,27 @@ namespace Playground.UI.Generation
     {
         public VisualTreeAsset GraphEditorLayout;
 
-        [SerializeField]
         private BlockFactory blockFactory;
+        private TypeColorProvider typeColorProvider;
 
         private VisualElement graphRoot;
         private Label labelCurrentGraphName;
+        private Label labelFeedback;
+        private Button buttonClear;
         private VisualElement containerGraphEditor;
 
         private Graph graph;
 
+        private bool addingConnection;
+        private bool isInput;
+        private int index;
+        private int parameterIndex;
+
         private void Awake()
         {
+            var sc = FindObjectOfType<ServiceCollector>();
+            blockFactory = sc.GetService<BlockFactory>();
+            typeColorProvider = sc.GetService<TypeColorProvider>();
         }
 
         public void Construct(VisualElement root)
@@ -27,7 +37,13 @@ namespace Playground.UI.Generation
             GraphEditorLayout.CloneTree(root);
             graphRoot = root.Q<VisualElement>(name: "Container-graphRoot");
             labelCurrentGraphName = graphRoot.Q<Label>(name: "Label-activeGraph");
+            labelFeedback = graphRoot.Q<Label>(name: "Label-feedback");
             containerGraphEditor = graphRoot.Q<VisualElement>(name: "Container-graphEditor");
+            buttonClear = graphRoot.Q<Button>(name: "Button-clear");
+
+            buttonClear.clicked += () => ButtonCancel();
+            buttonClear.visible = false;
+            labelFeedback.text = "";
         }
 
         public void Initialize()
@@ -90,6 +106,10 @@ namespace Playground.UI.Generation
             }
 
             last.Add(new VisualElement());
+        }
+
+        private void ButtonCancel()
+        {
         }
 
         private void CallEdit(int ID)
@@ -176,7 +196,7 @@ namespace Playground.UI.Generation
 
             for (int x = 0; x < arr.Length; x++)
             {
-                body.Add(GenerateBlockLine(arr[x], inputs));
+                body.Add(GenerateBlockLine(ID, x, arr[x], inputs));
             }
 
             if (arr.Length == 0)
@@ -187,7 +207,7 @@ namespace Playground.UI.Generation
             return body;
         }
 
-        private VisualElement GenerateBlockLine(ParameterMetadata data, bool input)
+        private VisualElement GenerateBlockLine(int ID, int paramID, ParameterMetadata data, bool input)
         {
             var line = new VisualElement();
             line.AddToClassList("blockElement");
@@ -198,9 +218,15 @@ namespace Playground.UI.Generation
             labelName.AddToClassList("blockTextLabel");
             var labelType = new Label(data.Type.Name);
             labelType.AddToClassList("blockTextLabel");
+
+            var typeColor = typeColorProvider.GetColor(data.Type);
+
+            labelType.style.unityTextOutlineColor = typeColor;
+            labelType.style.unityTextOutlineWidth = new StyleFloat(0.05f);
+
             textContainer.Add(labelName);
             textContainer.Add(labelType);
-            line.Add(GenerateDot());
+            line.Add(GenerateDot(ID, paramID, input, typeColor));
 
             if (input)
                 line.style.flexDirection = FlexDirection.RowReverse;
@@ -208,12 +234,14 @@ namespace Playground.UI.Generation
             return line;
         }
 
-        private VisualElement GenerateDot()
+        private VisualElement GenerateDot(int ID, int paramID, bool input, Color DotColor)
         {
-            var outer = new VisualElement();
+            var outer = new Button(() => { });
             outer.AddToClassList("blockInOut");
+            outer.AddToClassList("blockMicroButton");
             var inner = new VisualElement();
             inner.AddToClassList("blockInOutInner");
+            inner.style.backgroundColor = new StyleColor(DotColor);
             outer.Add(inner);
             return outer;
         }

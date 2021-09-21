@@ -14,7 +14,7 @@ namespace Playground.IoC
             collectedServices = collectedServices.Where((obj) => obj is IService).Distinct().ToArray();
         }
 
-        public T GetService<T>() where T : MonoBehaviour
+        public T GetService<T>() where T : MonoBehaviour, IService
         {
             return (T)collectedServices.First((obj) => obj is T);
         }
