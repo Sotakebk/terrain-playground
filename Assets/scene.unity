@@ -123,6 +123,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &203240384
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 203240386}
+  - component: {fileID: 203240387}
+  m_Layer: 0
+  m_Name: Other
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &203240386
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203240384}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &203240387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203240384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b63369a9227d16498f21775426d5720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collectedServices: []
 --- !u!1 &515994720
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +271,6 @@ GameObject:
   - component: {fileID: 557143793}
   - component: {fileID: 557143794}
   - component: {fileID: 557143792}
-  - component: {fileID: 557143795}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -249,11 +292,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OriginalMaterial: {fileID: 2100000, guid: 8ba6a6aef6c1c894bbbaa1e96afdc9e7, type: 2}
   Sun: {fileID: 515994721}
-  GradientTextures:
-  - {fileID: 2800000, guid: edd941cf0513c944f9b09bd21b35e360, type: 3}
+  gradientTextures:
   - {fileID: 2800000, guid: 651f77f1424243744a6b02218c18fa4f, type: 3}
+  - {fileID: 2800000, guid: edd941cf0513c944f9b09bd21b35e360, type: 3}
   - {fileID: 2800000, guid: 7139cc0d338f48c4c8585132a6000a14, type: 3}
-  LineTextures:
+  lineTextures:
   - {fileID: 2800000, guid: 150a79f333ae25545947d46a31197bc2, type: 3}
   - {fileID: 2800000, guid: f0d6a8eaf92801141ac66956fd56d047, type: 3}
   - {fileID: 2800000, guid: 59cb95b2ad7bc104181182a065ae8ad0, type: 3}
@@ -283,19 +326,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 629240c36ccb7dc4592312b99f024e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &557143795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 557143791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36f1f4bd094dfb94ca93ec172af48eb8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graphicsManager: {fileID: 557143792}
 --- !u!1 &622938291
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,7 +438,6 @@ GameObject:
   - component: {fileID: 1943092186}
   - component: {fileID: 1943092190}
   - component: {fileID: 1943092189}
-  - component: {fileID: 1943092188}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -446,20 +475,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1943092188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1943092185}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d3a4c790f40ddd4c97e609094b0e7cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  generationManager: {fileID: 557143795}
-  GenerationLayout: {fileID: 9197481963319205126, guid: 6829871e6135f7e4aabf45d6b5b88303, type: 3}
 --- !u!114 &1943092189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,13 +482,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1943092185}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e1a4b189ec9a4840a80f05959694cc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphicsManager: {fileID: 557143792}
   GraphicsLayout: {fileID: 9197481963319205126, guid: 860299e93a2d98746926e5b7606e8556, type: 3}
+  graphicsManager: {fileID: 557143792}
 --- !u!114 &1943092190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,3 +502,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uidocument: {fileID: 1943092186}
+  UIGenerators:
+  - {fileID: 1943092189}

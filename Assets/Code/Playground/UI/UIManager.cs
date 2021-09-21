@@ -1,55 +1,66 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Linq;
 
 namespace Playground.UI
 {
     [RequireComponent(typeof(GraphicsUI))]
-    [RequireComponent(typeof(GenerationUI))]
     public class UIManager : MonoBehaviour
     {
         public UIDocument uidocument;
 
-        private GraphicsUI graphicsUI;
-        private GenerationUI generationUI;
-        private VisualElement container;
+        [SerializeField]
+        private Object[] UIGenerators;
+
+        private IUIGenerator[] UI;
 
         private void Awake()
         {
-            graphicsUI = transform.GetComponent<GraphicsUI>();
-            generationUI = transform.GetComponent<GenerationUI>();
-            if (graphicsUI == null || generationUI == null)
+            UI = UIGenerators.OfType<IUIGenerator>().Distinct().ToArray();
+
+            if (UI == null)
                 throw new System.NullReferenceException();
         }
 
         private void Start()
         {
             var root = uidocument.rootVisualElement;
-            container = root.Q<VisualElement>(name: "Container-window");
+            var container = root.Q<VisualElement>(name: "Container-window");
+            var buttonContainer = root.Q<VisualElement>(name: "Container-buttons");
 
-            Button b = root.Q<Button>(name: "Button-close");
-            b.clicked += () =>
-            {
-                RemoveNestedUI();
-            };
+            root.Q<Button>(name: "Button-closeAll").clicked += () => ButtonPressClear();
 
-            b = root.Q<Button>(name: "Button-display");
-            b.clicked += () =>
+            for (int x = 0; x < UI.Length; x++)
             {
-                RemoveNestedUI();
-                graphicsUI.Construct(container);
-            };
+                var _x = x;
 
-            b = root.Q<Button>(name: "Button-generation");
-            b.clicked += () =>
-            {
-                RemoveNestedUI();
-                generationUI.Construct(container);
-            };
+                var button = new Button(() => ButtonPress(_x));
+                button.text = UI[x].Name;
+                button.AddToClassList("smallButton");
+                buttonContainer.Add(button);
+
+                UI[x].Construct(container);
+            }
+
+            for (int x = 0; x < UI.Length; x++)
+                UI[x].Initialize();
+
+            for (int x = 0; x < UI.Length; x++)
+                UI[x].Disable();
         }
 
-        private void RemoveNestedUI()
+        private void ButtonPress(int index)
         {
-            container.Clear();
+            if (UI[index].IsEnabled)
+                UI[index].Disable();
+            else
+                UI[index].Enable();
+        }
+
+        private void ButtonPressClear()
+        {
+            for (int x = 0; x < UI.Length; x++)
+                UI[x].Disable();
         }
     }
 }

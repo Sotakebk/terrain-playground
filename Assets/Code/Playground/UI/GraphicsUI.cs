@@ -4,15 +4,24 @@ using UnityEngine.UIElements;
 
 namespace Playground.UI
 {
-    public class GraphicsUI : MonoBehaviour
+    public class GraphicsUI : MonoBehaviour, IUIGenerator
     {
+        public VisualTreeAsset GraphicsLayout;
+
         public GraphicsManager graphicsManager;
 
-        public VisualTreeAsset GraphicsLayout;
+        private VisualElement graphicsRoot;
+
+        public string Name => "Display settings";
+
+        private bool isEnabled;
+        public bool IsEnabled => isEnabled;
 
         public void Construct(VisualElement root)
         {
             GraphicsLayout.CloneTree(root);
+
+            graphicsRoot = root.Q<VisualElement>(name: "Container-display");
 
             Slider s = root.Q<Slider>(name: "Slider-sunDirection");
             s.value = graphicsManager.LightDirection;
@@ -45,24 +54,40 @@ namespace Playground.UI
             var group = root.Q<VisualElement>(name: "Container-gradients");
             for (int i = 0; i < graphicsManager.GradientTextures.Count; i++)
             {
-                // ...whaat
+                var texture = graphicsManager.GradientTextures[i];
                 int _i = i;
                 var b = new Button(() => graphicsManager.SetGradientTexture(_i));
-                b.contentContainer.style.backgroundImage = graphicsManager.GradientTextures[i];
-                b.text = graphicsManager.GradientTextures[i].name;
+                b.contentContainer.style.backgroundImage = texture;
+                b.text = texture.name;
                 group.Add(b);
             }
 
             group = root.Q<VisualElement>(name: "Container-lines");
             for (int i = 0; i < graphicsManager.LineTextures.Count; i++)
             {
-                // this thing scares me
+                var texture = graphicsManager.LineTextures[i];
                 int _i = i;
                 var b = new Button(() => graphicsManager.SetLineTexture(_i));
-                b.contentContainer.style.backgroundImage = graphicsManager.LineTextures[i];
-                b.text = graphicsManager.LineTextures[i].name;
+                b.contentContainer.style.backgroundImage = texture;
+                b.text = texture.name;
                 group.Add(b);
             }
+        }
+
+        public void Disable()
+        {
+            isEnabled = false;
+            graphicsRoot.style.display = DisplayStyle.None;
+        }
+
+        public void Enable()
+        {
+            isEnabled = true;
+            graphicsRoot.style.display = DisplayStyle.Flex;
+        }
+
+        public void Initialize()
+        {
         }
     }
 }

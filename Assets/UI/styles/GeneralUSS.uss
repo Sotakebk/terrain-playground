@@ -1,3 +1,18 @@
 .tintedPanel {
     background-color: rgba(200, 200, 200, 0.61);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: rgba(0, 0, 0, 0.19);
+    border-right-color: rgba(0, 0, 0, 0.19);
+    border-top-color: rgba(0, 0, 0, 0.19);
+    border-bottom-color: rgba(0, 0, 0, 0.19);
+}
+
+.smallButton {
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }

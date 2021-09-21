@@ -1,7 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="styles/GeneralUSS.uss" />
-    <ui:VisualElement class="tintedPanel" style="width: 100%; height: 100%; flex-grow: 1; flex-shrink: 0; align-items: flex-start;">
-        <ui:Label text="Generation Settings" display-tooltip-when-elided="true" />
-        <ui:Button text="Click to generate an example" display-tooltip-when-elided="true" name="Button-generate" />
-    </ui:VisualElement>
-</ui:UXML>
