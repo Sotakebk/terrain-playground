@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Playground
 {
@@ -30,9 +31,20 @@ namespace Playground
             return (value * 2) - 1;
         }
 
+        // E^(-x-b)
+        public static float EXBCurve(float X, float B)
+        {
+            return Mathf.Exp(-X - B);
+        }
+
+        public static float InverseEXB(float Y, float B)
+        {
+            return -Mathf.Log(Y) - B;
+        }
+
         public static void Normalize(Heightmap h)
         {
-            int size = h.size;
+            int size = h.Size;
             float min = float.MaxValue;
             float max = float.MinValue;
 
@@ -40,7 +52,7 @@ namespace Playground
             {
                 for (int y = 0; y < size; y++)
                 {
-                    float v = h.data[x + y * size];
+                    float v = h.Data[x + y * size];
                     if (v < min) min = v;
                     if (v > max) max = v;
                 }
@@ -53,7 +65,7 @@ namespace Playground
             {
                 for (int y = 0; y < size; y++)
                 {
-                    h.data[x + y * size] = (toZero + h.data[x + y * size]) * toRange;
+                    h.Data[x + y * size] = (toZero + h.Data[x + y * size]) * toRange;
                 }
             });
         }

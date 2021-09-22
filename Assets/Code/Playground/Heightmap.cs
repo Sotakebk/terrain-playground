@@ -2,22 +2,22 @@
 {
     public class Heightmap
     {
-        public float[] data;
-        public readonly int size;
+        public readonly float[] Data;
+        public readonly int Size;
 
         public Heightmap(int size)
         {
             if (!Helper.IsPowerOf2(size))
                 throw new System.ArgumentException("'size' not power of 2");
 
-            this.size = size;
-            data = new float[size * size];
+            this.Size = size;
+            Data = new float[size * size];
         }
 
         public Heightmap Clone()
         {
-            var h = new Heightmap(size);
-            System.Array.Copy(data, h.data, size * size);
+            var h = new Heightmap(Size);
+            System.Array.Copy(Data, h.Data, Size * Size);
             return h;
         }
 
@@ -25,11 +25,11 @@
         {
             get
             {
-                return data[p];
+                return Data[p];
             }
             set
             {
-                data[p] = value;
+                Data[p] = value;
             }
         }
 
@@ -37,11 +37,11 @@
         {
             get
             {
-                return data[size * y + x];
+                return Data[Size * y + x];
             }
             set
             {
-                data[size * y + x] = value;
+                Data[Size * y + x] = value;
             }
         }
     }
